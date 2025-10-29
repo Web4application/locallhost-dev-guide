@@ -1,5 +1,3 @@
-https://locallhost.dev
-
 ## Quick Commands for Port 9000
 
 Find what's using port 9000:
@@ -233,3 +231,214 @@ Prometheus Overview
 Port 9000 serves as a critical port for quality assurance, monitoring, and container management in modern development environments. It's primarily associated with SonarQube for code quality analysis, PHP-FPM for high-performance PHP applications, and various monitoring tools that help maintain application reliability and performance.
 
 Whether you're implementing code quality gates, optimizing PHP applications, managing Docker containers, or setting up comprehensive monitoring solutions, port 9000 provides the infrastructure needed for professional-grade development workflows. Understanding its configuration and integration patterns will significantly enhance your development practices and application quality.
+
+Quick Commands for Port 5173
+
+Find what's using port 5173:
+lsof -i :5173 (Mac/Linux)
+netstat -ano | findstr :5173 (Windows)
+Start Vite on different port:
+npm run dev -- --port 5174
+vite --port 5174
+Start with network access:
+npm run dev -- --host
+vite --host 0.0.0.0
+Build for production:
+npm run build
+npm run preview (preview build)
+🚀 Vite Configuration Examples
+
+Essential vite.config.js configurations for development:
+
+Basic Configuration:
+// vite.config.js
+export default defineConfig({
+  server: {
+    port: 5173,
+    open: true,
+    cors: true
+  }
+})
+Proxy API calls:
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:3000',
+      changeOrigin: true
+    }
+  }
+}
+🐳 Docker Configuration for Vite
+
+Running Vite applications in Docker containers:
+
+Development Dockerfile:
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 5173
+CMD ["npm", "run", "dev", "--", "--host"]
+Production Dockerfile:
+FROM node:18-alpine as build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+About Port 5173
+
+Port 5173 is commonly used by:
+
+Vite.js development server (default port)
+Vue 3 projects using Vite
+React projects using Vite
+Svelte projects using Vite
+SvelteKit applications
+Common Issues with Port 5173
+
+"Port 5173 is already in use"
+
+This error occurs when another application is already using port 5173. Solutions:
+
+Find and close the application using port 5173
+Use a different port:
+Command line: npm run dev -- --port 5174
+In vite.config.js:
+export default defineConfig({
+  server: {
+    port: 5174
+  }
+})
+On Windows, find and kill the process: netstat -ano | findstr :5173 then taskkill /PID [PID] /F
+On Linux/Mac: lsof -i :5173 then kill -9 [PID]
+"Hot Module Replacement (HMR) not working"
+
+If changes aren't automatically reflecting in the browser:
+
+Check if your Vite server is running with HMR enabled
+Ensure you haven't disabled HMR in your vite.config.js
+Check for errors in the browser console
+Try restarting the development server
+Make sure your file is being processed by Vite (check import paths)
+"Cannot access localhost:5173 from other devices"
+
+By default, Vite's development server only listens on localhost:
+
+To make it accessible from other devices: npm run dev -- --host
+Or in vite.config.js:
+export default defineConfig({
+  server: {
+    host: '0.0.0.0'
+  }
+})
+Then access it using your computer's IP address: http://YOUR_IP:5173
+"Module resolution errors"
+
+When Vite can't find your modules or imports fail:
+
+Check file extensions - Vite needs explicit extensions for non-JS files
+Verify your import paths are correct and case-sensitive
+Use absolute imports with path mapping in vite.config.js
+Clear node_modules and reinstall: rm -rf node_modules && npm install
+Check if you need to configure resolve.alias in vite.config.js
+"Build failures or slow builds"
+
+When production builds fail or take too long:
+
+Check for TypeScript errors: npm run type-check
+Analyze bundle size: npm run build -- --analyze
+Enable build caching and incremental builds
+Review large dependencies and consider alternatives
+Use dynamic imports for code splitting
+🛠️ Essential Vite Plugins & Tools
+
+Vue Development:
+npm install @vitejs/plugin-vue
+Enable Vue SFC support and HMR
+
+React Development:
+npm install @vitejs/plugin-react
+Fast refresh and JSX support
+
+TypeScript Support:
+npm install typescript @types/node
+Built-in TypeScript compilation
+
+Environment Variables:
+// .env files
+VITE_API_URL=http://localhost:3000
+VITE_APP_TITLE=My App
+Access with import.meta.env.VITE_*
+
+⚡ Performance Optimization Tips
+
+Code Splitting: Use dynamic imports: const Component = lazy(() => import('./Component'))
+Tree Shaking: Vite automatically removes unused code in production builds
+Asset Optimization: Images and fonts are automatically optimized
+Bundle Analysis: Use vite-bundle-analyzer to visualize bundle size
+Pre-bundling: Vite pre-bundles dependencies for faster cold starts
+CSS Code Splitting: CSS is automatically split by routes
+🔧 Advanced Vite Features
+
+CSS Preprocessors:
+npm install sass less stylus
+Built-in support, just import .scss/.less files
+
+PostCSS Integration:
+// postcss.config.js
+export default {
+  plugins: [require('autoprefixer')]
+}
+Global Stylus Variables:
+css: {
+  preprocessorOptions: {
+    stylus: {
+      additionalData: '@import "./src/vars.styl"'
+    }
+  }
+}
+Import Alias:
+resolve: {
+  alias: {
+    '@': path.resolve(__dirname, './src'),
+    '~': path.resolve(__dirname, './src')
+  }
+}
+🔧 Troubleshooting Checklist
+
+Before You Start Debugging:
+
+✅ Check Node.js version (Vite requires Node 14.18+): node --version
+✅ Verify you're in the correct project directory with package.json
+✅ Ensure Vite is installed: npm list vite
+✅ Check vite.config.js syntax and imports
+✅ Verify no conflicting processes on port 5173
+✅ Clear Vite cache: rm -rf node_modules/.vite
+✅ Check browser console for JavaScript errors
+✅ Try running in different browsers or incognito mode
+🛡️ Security & Best Practices
+
+Environment Variables: Only expose variables with VITE_ prefix to frontend
+HTTPS in Development: Use server: { https: true } for testing HTTPS
+Dependency Security: Run npm audit regularly
+Build Security: Use --mode production for production builds
+Source Maps: Disable in production: build: { sourcemap: false }
+Asset Optimization: Enable compression and minification in production
+Related Ports You Might Need
+
+Port 5174 - Vite fallback port
+Port 3000 - Backend API server
+Port 4200 - Angular development
+Port 8080 - Backend services
+Useful Resources
+
+Vite.js Documentation
+Vue 3 Quick Start
+React Documentation
+Svelte Documentation
+SvelteKit Documentation
