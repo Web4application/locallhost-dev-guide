@@ -1,9 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Server port="9005" shutdown="SHUTDOWN">
+  <!--
+    Shutdown port: 9005 (custom for dev, change if needed)
+    Shutdown command: "SHUTDOWN" (type in console to safely stop Tomcat)
+  -->
 
+  <!-- Listener to log Tomcat version at startup -->
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+
+  <Service name="Catalina">
+    
+    <!-- HTTP Connector (development) -->
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443" />
+    <!--
+      port="8080": HTTP port for your apps
+      redirectPort="8443": where HTTP requests redirect for HTTPS
+    -->
+
+    <!-- HTTPS Connector (SSL/Dev) -->
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               maxThreads="200"
+               SSLEnabled="true"
+               scheme="https"
+               secure="true"
+               clientAuth="false"
+               sslProtocol="TLS"
+               keystoreFile="conf/keystore.jks"
+               keystorePass="changeit" />
+    <!--
+      keystoreFile: path to your Java Keystore
+      keystorePass: password for the keystore
+      Adjust for your local SSL setup
+    -->
+
+    <!-- Engine to handle requests -->
+    <Engine name="Catalina" defaultHost="localhost">
+
+      <!-- Default Host -->
+      <Host name="localhost" appBase="webapps"
+            unpackWARs="true" autoDeploy="true">
+        <!--
+          appBase: folder where apps are deployed
+          unpackWARs: auto-unpack WAR files
+          autoDeploy: watch for changes and auto-reload
+        -->
+      </Host>
+
+      <!-- Example of adding a custom virtual host -->
+      <!--
+      <Host name="myapp.local" appBase="webapps/myapp" unpackWARs="true" autoDeploy="true">
+        <Alias>www.myapp.local</Alias>
+      </Host>
+      -->
+
+    </Engine>
+
+  </Service>
+
+</Server>
 <!-- Dynamic User Preferences Panel -->
 <div id="user-preferences" style="position: fixed; bottom: 20px; right: 20px; 
      background: #222; color: #fff; padding: 15px; border-radius: 8px; z-index: 1000;">
   <h4 style="margin-top:0;">UI Settings</h4>
-  
   <label>
     Theme:
     <select id="theme-select">
