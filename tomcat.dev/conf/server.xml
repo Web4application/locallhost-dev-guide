@@ -1,66 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Server port="9005" shutdown="SHUTDOWN">
-  <!-- Shutdown port and command -->
-  <Listener className="org.apache.catalina.startup.VersionLoggerListener"/>
-  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on"/>
-  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener"/>
-  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener"/>
-
+<Server port="9000" shutdown="SHUTDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
   <Service name="Catalina">
-    
-    <!-- HTTP Connector -->
-    <Connector port="8080" protocol="HTTP/1.1"
-               connectionTimeout="20000"
-               redirectPort="8443" />
-    
-    <!-- HTTPS Connector -->
+    <Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443"/>
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
-               maxThreads="200"
-               SSLEnabled="true"
-               scheme="https"
-               secure="true"
-               clientAuth="false"
-               sslProtocol="TLS"
+               maxThreads="200" SSLEnabled="true" scheme="https" secure="true"
+               clientAuth="false" sslProtocol="TLS"
                keystoreFile="conf/keystore.jks"
-               keystorePass="changeit" />
-    
-    <!-- AJP Connector for reverse proxy -->
-    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
-
-    <Engine name="Catalina" defaultHost="localhost" jvmRoute="node1">
-
-      <!-- Default Host -->
-      <Host name="localhost" appBase="webapps"
-            unpackWARs="true" autoDeploy="true"
-            deployOnStartup="true">
-        <!-- Enable context reload for dev -->
-        <Context path="" reloadable="true"/>
-      </Host>
-
-      <!-- Virtual host for microservice #1 -->
-      <Host name="service1.local" appBase="webapps/service1"
-            unpackWARs="true" autoDeploy="true"
-            deployOnStartup="true">
-        <Alias>www.service1.local</Alias>
-        <Context path="" reloadable="true"/>
-      </Host>
-
-      <!-- Virtual host for microservice #2 -->
-      <Host name="service2.local" appBase="webapps/service2"
-            unpackWARs="true" autoDeploy="true"
-            deployOnStartup="true">
-        <Alias>www.service2.local</Alias>
-        <Context path="" reloadable="true"/>
-      </Host>
-
-      <!-- Optional debugging valve -->
-      <Valve className="org.apache.catalina.valves.AccessLogValve"
-             directory="logs"
-             prefix="localhost_access_log"
-             suffix=".txt"
-             pattern="%h %l %u %t &quot;%r&quot; %s %b"
-             resolveHosts="false"/>
+               keystorePass="changeit"/>
+    <Engine name="Catalina" defaultHost="localhost">
+      <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true"/>
     </Engine>
-
   </Service>
 </Server>
