@@ -1,4 +1,4 @@
-https://github.com/Web4application/locallhost-dev-guide/tree/main/docs#%EF%B8%8F-backend-development-ports
+https://locallhost.dev
 
 ## Quick Commands for Port 9000
 
@@ -56,7 +56,7 @@ Comprehensive guide for setting up and managing SonarQube on port 9000
 ```
 
 ## Installation & Setup
-          –––
+–––
 
 ```
     docker run -d --name sonarqube -p 9000:9000 sonarqube:latest
