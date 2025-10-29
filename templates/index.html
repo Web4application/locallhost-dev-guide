@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>locallhost.dev Chat</title>
+  <link rel="stylesheet" href="/static/chat.css">
+</head>
+<body>
+  <h1>locallhost.dev Live Chat</h1>
+
+  <ul id="messages">
+    {% for message in messages %}
+      <li>{{ message.html | safe }}</li>
+    {% end %}
+  </ul>
+
+  <form id="chat-form">
+    <input type="text" name="username" placeholder="Your name">
+    <input type="text" name="body" placeholder="Type a message..." required>
+    <input type="hidden" name="_xsrf" value="{{ xsrf_token }}">
+    <button type="submit">Send</button>
+  </form>
+
+  <script src="/static/chat.js"></script>
+</body>
+</html>
