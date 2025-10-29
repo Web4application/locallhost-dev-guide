@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Server port="9005" shutdown="SHUTDOWN">
+<Server port="50080" shutdown="SHUTDOWN">
   <!--
     Shutdown port: 9005 (custom for dev, change if needed)
     Shutdown command: "SHUTDOWN" (type in console to safely stop Tomcat)
