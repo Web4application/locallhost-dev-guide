@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Localhost Dev Cheat Sheet</title>
+<style>
+  :root{
+    --bg:#0f1724; --card:#0b1220; --muted:#9aa6b2; --accent:#7dd3fc;
+    --glass: rgba(255,255,255,0.03);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:24px; background:linear-gradient(180deg,#071024 0%, #071827 100%);
+    color:#e6eef6; -webkit-font-smoothing:antialiased; min-height:100vh;
+  }
+  header{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+  .logo{
+    width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#60a5fa);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:#021028;
+    box-shadow:0 6px 18px rgba(0,0,0,0.6);
+  }
+  h1{font-size:18px;margin:0}
+  p.lead{margin:0;color:var(--muted);font-size:13px}
+
+  .container{display:flex;gap:20px;align-items:flex-start}
+  nav{width:260px;background:var(--card);border-radius:12px;padding:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+  nav input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit}
+  .tabs{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+  .tab-btn{padding:10px;border-radius:8px;border:0;background:transparent;color:var(--muted);text-align:left;cursor:pointer}
+  .tab-btn.active{color:var(--accent);background:linear-gradient(90deg, rgba(125,211,252,0.06), transparent);font-weight:600}
+
+  main{flex:1;min-height:420px}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        border-radius:12px;padding:18px;box-shadow:0 10px 30px rgba(2,6,23,0.6);overflow:auto;max-height:80vh}
+  .section-row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+  .code{
+    background:#00111a;padding:12px;border-radius:8px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+    font-size:13px;color:#bfeefe;white-space:pre-wrap;position:relative;
+  }
+  .code .copy{
+    position:absolute;right:10px;top:10px;background:transparent;border:1px solid rgba(255,255,255,0.04);
+    padding:6px;border-radius:6px;cursor:pointer;color:var(--muted)
+  }
+  table{width:100%;border-collapse:collapse;margin-top:10px}
+  td, th{padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03);text-align:left}
+  th{color:var(--muted);font-size:13px}
+  .muted{color:var(--muted);font-size:13px}
+  .small{font-size:12px;color:var(--muted)}
+  .pill{display:inline-block;padding:6px 8px;border-radius:999px;border:1px dashed rgba(255,255,255,0.03);font-size:12px;color:var(--muted)}
+  .search-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .search-row input{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+  .port-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;background:linear-gradient(90deg, rgba(255,255,255,0.01), transparent)}
+  .port-item + .port-item{margin-top:8px}
+  .port-left{display:flex;gap:12px;align-items:center}
+  .port-num{font-weight:700;color:var(--accent);min-width:60px}
+  .btn{padding:8px 10px;border-radius:8px;border:0;cursor:pointer;background:linear-gradient(90deg,#034e6a,#0f78a1);color:white}
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+  footer{margin-top:12px;color:var(--muted);font-size:12px}
+  .flex-gap{display:flex;gap:8px;align-items:center}
+
+  /* responsive */
+  @media (max-width:900px){
+    .container{flex-direction:column}
+    nav{width:100%}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">LH</div>
+  <div>
+    <h1>Localhost Dev Cheat Sheet</h1>
+    <p class="lead">Interactive quick-reference for ports, commands, and troubleshooting — copy, search, use. Fast & spicy.</p>
+  </div>
+</header>
+
+<div class="container">
+  <nav class="card" aria-label="navigation">
+    <input id="navFilter" placeholder="Filter tabs / commands (e.g., kill, 3000)" />
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="quick">Quick Commands</button>
+      <button class="tab-btn" data-tab="ports">Common Ports</button>
+      <button class="tab-btn" data-tab="troubleshoot">Troubleshooting</button>
+      <button class="tab-btn" data-tab="frameworks">Framework Guides</button>
+      <button class="tab-btn" data-tab="http">HTTP Snapshot</button>
+      <button class="tab-btn" data-tab="download">Download / Save</button>
+    </div>
+  </nav>
+
+  <main>
+    <section id="quick" class="card tab-content">
+      <h2>Quick Localhost Commands</h2>
+      <p class="muted small">Copy a command and paste into your terminal. Replace <code>PORT</code> and <code>PID</code>.</p>
+
+      <div class="section-row">
+        <div style="flex:1" class="code" id="cmd1">
+<code>lsof -i :PORT            # (Mac/Linux) find what's using a port
+netstat -ano | findstr :PORT # (Windows) find what's using a port
+kill -9 PID                  # (Mac/Linux) kill a process by PID
+taskkill /PID PID /F         # (Windows) kill a process by PID
+nc -zv localhost PORT        # (Mac/Linux) check if port is open
+telnet localhost PORT        # (Windows/Linux) check if port is open
+python -m http.server PORT   # start a simple HTTP server (python)
+npx http-server -p PORT      # start simple static server (node)</code>
+          <button class="copy" data-target="cmd1">Copy</button></div>
+      </div>
+
+      <div class="section-row">
+        <div style="flex:1" class="code" id="cmd2">
+<code># Useful one-liners
+# kill processes using a port (Mac/Linux)
+kill -9 $(lsof -t -i:3000)
+
+# list listening sockets (linux)
+ss -tuln
+
+# open a browser to a port (mac)
+open http://localhost:3000</code>
+          <button class="copy" data-target="cmd2">Copy</button></div>
+      </div>
+
+      <div class="section-row">
+        <div style="flex:1">
+          <div class="pill">Pro tip: use backups like 3001, 8081, 5001 when dev conflicts happen</div>
+          <div style="height:10px"></div>
+          <button class="btn" onclick="showTab('ports')">Browse Common Ports</button>
+          <button class="ghost" onclick="showTab('troubleshoot')">Open Troubleshooting</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="ports" class="card tab-content" style="display:none">
+      <h2>Common Development & Database Ports</h2>
+      <div class="search-row">
+        <input id="portSearch" placeholder="Search port or service (e.g., react, 5432)" />
+        <button class="btn" onclick="filterPorts()">Search</button>
+      </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px">
+          <h3>Web / Dev Frameworks</h3>
+          <div id="portsList">
+            <!-- dynamically injected -->
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:260px">
+          <h3>Databases</h3>
+          <table aria-label="database ports">
+            <thead><tr><th>Service</th><th>Port</th></tr></thead>
+            <tbody>
+              <tr><td>MySQL / MariaDB</td><td>3306</td></tr>
+              <tr><td>PostgreSQL</td><td>5432</td></tr>
+              <tr><td>MongoDB</td><td>27017</td></tr>
+              <tr><td>Redis</td><td>6379</td></tr>
+              <tr><td>SQL Server</td><td>1433</td></tr>
+            </tbody>
+          </table>
+          <div style="height:8px"></div>
+          <div class="small muted">Click a port to copy a useful command to inspect or kill that port.</div>
+        </div>
+      </div>
+
+      <footer class="small muted">Alternatives: 3001, 8081, 5001, 4201 — keep backups when one port's taken.</footer>
+    </section>
+
+    <section id="troubleshoot" class="card tab-content" style="display:none">
+      <h2>Troubleshooting Center</h2>
+      <p class="muted small">Common local dev problems — quick fixes and commands.</p>
+
+      <details open>
+        <summary style="cursor:pointer">Port Already In Use</summary>
+        <div style="padding:12px 8px">
+          <div class="code" id="fix1"><code># Mac/Linux: find PID then kill
+lsof -i :PORT
+kill -9 PID
+
+# Windows: find PID then kill
+netstat -ano | findstr :PORT
+tasklist /fi "PID eq <pid>"
+taskkill /PID <pid> /F</code>
+            <button class="copy" data-target="fix1">Copy</button>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary style="cursor:pointer">Connection Refused / Server Not Listening</summary>
+        <div style="padding:12px 8px">
+          <div class="code"><code># Check listening sockets
+ss -tuln     # linux
+netstat -an  # mac/windows
+# If service is not running: check logs / start your app
+</code></div>
+        </div>
+      </details>
+
+      <details>
+        <summary style="cursor:pointer">CORS Errors</summary>
+        <div style="padding:12px 8px">
+          <p class="muted small">If frontend can't reach backend due to CORS, either configure CORS on backend or use a dev proxy (vite, CRA proxy, webpack devServer).</p>
+          <div class="code" id="fixCORS"><code># Example (express)
+npm i cors
+# server.js
+const cors = require('cors')
+app.use(cors({ origin: 'http://localhost:3000' }))</code>
+            <button class="copy" data-target="fixCORS">Copy</button>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary style="cursor:pointer">Localhost Not Working (DNS / Hosts)</summary>
+        <div style="padding:12px 8px">
+          <p class="muted small">Check /etc/hosts (Mac/Linux) or C:\Windows\System32\drivers\etc\hosts (Windows). Ensure `127.0.0.1 localhost` exists.</p>
+        </div>
+      </details>
+    </section>
+
+    <section id="frameworks" class="card tab-content" style="display:none">
+      <h2>Framework Guides (shortcuts)</h2>
+      <div class="section-row">
+        <div style="flex:1;min-width:220px">
+          <h4>React / Node</h4>
+          <div class="small muted">dev server: <code>npm start</code> (create-react-app), or <code>vite</code> for Vite projects on 5173</div>
+          <div style="height:8px"></div>
+          <div class="code" id="react">
+<code># Start a simple react vite project
+npm create vite@latest my-app --template react
+cd my-app
+npm install
+npm run dev # opens on 5173 by default</code>
+            <button class="copy" data-target="react">Copy</button>
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:220px">
+          <h4>Flask / Python</h4>
+          <div class="small muted">default port often 5000</div>
+          <div class="code" id="flask">
+<code>export FLASK_APP=app.py
+export FLASK_ENV=development
+flask run --port=5000</code>
+            <button class="copy" data-target="flask">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-row">
+        <div style="flex:1;min-width:220px">
+          <h4>Spring Boot</h4>
+          <div class="small muted">default port 8080 (changeable via application.properties)</div>
+          <div class="code"><code># override port when starting
+java -jar app.jar --server.port=8081</code></div>
+        </div>
+
+        <div style="flex:1;min-width:220px">
+          <h4>Django</h4>
+          <div class="small muted">default dev server port 8000</div>
+          <div class="code" id="django"><code>python manage.py runserver 8000</code>
+            <button class="copy" data-target="django">Copy</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="http" class="card tab-content" style="display:none">
+      <h2>HTTP Request Snapshot</h2>
+      <p class="muted small">Example headers you may see in browser devtools — useful for reproducing requests.</p>
+      <table>
+        <tbody>
+          <tr><th>Header</th><th>Value</th></tr>
+          <tr><td>User-Agent</td><td>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)...</td></tr>
+          <tr><td>Language</td><td>en-GB</td></tr>
+          <tr><td>Platform</td><td>MacIntel</td></tr>
+          <tr><td>Screen</td><td>375x812</td></tr>
+          <tr><td>Referrer</td><td>https://locallhost.dev/4201/</td></tr>
+        </tbody>
+      </table>
+
+      <div style="height:10px"></div>
+      <div class="code" id="curlExample"><code># Example curl reproducing a GET
+curl -v -H "Accept: application/json" "http://localhost:3000/api/health"</code>
+        <button class="copy" data-target="curlExample">Copy</button>
+      </div>
+    </section>
+
+    <section id="download" class="card tab-content" style="display:none">
+      <h2>Save / Export</h2>
+      <p class="muted small">You can save this page (File → Save) or run a quick static server to share locally.</p>
+      <div class="section-row">
+        <div style="flex:1">
+          <div class="code" id="serve"><code># start a simple server from current directory:
+python -m http.server 8000
+# or
+npx http-server -p 8000
+# then open:
+http://localhost:8000/localhost-cheatsheet.html
+</code><button class="copy" data-target="serve">Copy</button></div>
+        </div>
+      </div>
+
+      <div class="section-row">
+        <button class="btn" onclick="downloadFile()">Download HTML</button>
+        <div class="small muted">Instant download of this file as <code>localhost-cheatsheet.html</code>.</div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+/* ----- Tab logic ----- */
+const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+const contents = Array.from(document.querySelectorAll('.tab-content'));
+tabs.forEach(btn=>{
+  btn.addEventListener('click', ()=> {
+    tabs.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    showTab(btn.dataset.tab);
+  });
+});
+function showTab(id){
+  contents.forEach(c=> c.style.display = c.id === id ? '' : 'none');
+  // scroll top
+  window.scrollTo({top:0, behavior:'smooth'});
+  // focus search for ports when opened
+  if(id === 'ports') document.getElementById('portSearch').focus();
+}
+
+/* ----- Copy buttons ----- */
+document.querySelectorAll('.copy').forEach(btn=>{
+  btn.addEventListener('click', async (e)=>{
+    const target = document.getElementById(btn.dataset.target);
+    if(!target) return;
+    const text = target.innerText;
+    try{
+      await navigator.clipboard.writeText(text);
+      btn.innerText = 'Copied ✓';
+      setTimeout(()=> btn.innerText = 'Copy', 1200);
+    }catch(err){
+      btn.innerText = 'Failed';
+      setTimeout(()=> btn.innerText = 'Copy', 1200);
+    }
+  });
+});
+
+/* ----- Ports list data ----- */
+const ports = [
+  {port:3000, name:'React / Express / Rails (dev)'},
+  {port:8080, name:'Spring Boot / Tomcat / Vue.js'},
+  {port:8000, name:'Django / PHP'},
+  {port:4200, name:'Angular / Ionic'},
+  {port:5000, name:'Flask / .NET Core / Python'},
+  {port:5173, name:'Vite.js / Vue 3 / React (fast dev)'},
+  {port:9000, name:'SonarQube / PHP-FPM / Tomcat'},
+  {port:3001, name:'React/Node backup'},
+  {port:8081, name:'Spring Boot/Tomcat backup'},
+  {port:5001, name:'Flask/.NET backup'},
+  {port:4201, name:'Angular backup'}
+];
+
+function renderPorts(list){
+  const container = document.getElementById('portsList');
+  container.innerHTML = '';
+  list.forEach(p=>{
+    const el = document.createElement('div');
+    el.className = 'port-item';
+    el.innerHTML = `
+      <div class="port-left">
+        <div class="port-num">${p.port}</div>
+        <div>
+          <div style="font-weight:600">${p.name}</div>
+          <div class="small muted">Click actions to inspect or kill</div>
+        </div>
+      </div>
+      <div class="flex-gap">
+        <button class="ghost" onclick="inspectPort(${p.port})">Inspect</button>
+        <button class="btn" onclick="prepareKill(${p.port})">Kill</button>
+      </div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+function filterPorts(){
+  const q = document.getElementById('portSearch').value.trim().toLowerCase();
+  if(!q){ renderPorts(ports); return; }
+  const filtered = ports.filter(p=> String(p.port).includes(q) || p.name.toLowerCase().includes(q));
+  renderPorts(filtered.length?filtered:ports);
+}
+
+function inspectPort(port){
+  const text = `# Inspect port ${port}
+# Mac / Linux
+lsof -i :${port}
+
+# Windows
+netstat -ano | findstr :${port}`;
+  navigator.clipboard.writeText(text).then(()=> alert('Inspect commands copied to clipboard'));
+}
+
+function prepareKill(port){
+  const text = `# Kill processes using port ${port}
+# Mac / Linux
+kill -9 $(lsof -t -i:${port})
+
+# Windows (use returned PID)
+taskkill /PID <PID> /F`;
+  navigator.clipboard.writeText(text).then(()=> alert('Kill-one-liners copied to clipboard'));
+}
+
+/* ----- Nav quick filter ----- */
+document.getElementById('navFilter').addEventListener('input', (e)=>{
+  const q = e.target.value.trim().toLowerCase();
+  // highlight tabs that match
+  tabs.forEach(b=>{
+    const txt = b.innerText.toLowerCase();
+    b.style.display = txt.includes(q) || q === '' ? '' : 'none';
+  });
+});
+
+/* ----- Download current HTML ----- */
+function downloadFile(){
+  const html = `<!doctype html>\n` + document.documentElement.outerHTML;
+  const blob = new Blob([html], {type: 'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'localhost-cheatsheet.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ----- initial render ----- */
+renderPorts(ports);
+</script>
+</body>
+</html>
