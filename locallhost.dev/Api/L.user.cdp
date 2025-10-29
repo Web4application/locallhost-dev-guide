@@ -87,7 +87,6 @@ Plugin management
 🐘 PHP-FPM Configuration Guide
 
 Complete setup and optimization guide for PHP-FPM on port 9000
-
 Installation & Configuration
 
      apt-get install php-fpm - Ubuntu/Debian
