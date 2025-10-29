@@ -1,7 +1,6 @@
 import os
 from buildbot.www.hooks import AuthenticatedResource
 from dotenv import load_dotenv
-
 # --- Load admin users from .env.local ---
 load_dotenv(dotenv_path=".env.local")
 ADMIN_USERS = os.getenv("ADMIN_USERS", "admin").split(",")
