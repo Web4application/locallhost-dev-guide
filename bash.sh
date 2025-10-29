@@ -47,3 +47,11 @@ npx http-server -p $PORT &
 # Output URLs
 echo "Server running at: http://localhost:$PORT"
 echo "LAN URL: http://$LAN:$PORT"
+
+
+# React (Vite)
+npm create vite@latest my-app --template react
+cd my-app
+npm install
+npm run dev # opens on 5173 by default
+         
