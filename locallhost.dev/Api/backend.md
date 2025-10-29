@@ -56,7 +56,6 @@ Comprehensive guide for setting up and managing SonarQube on port 9000
 
 ## Installation & Setup
 –––
-
 ```
     docker run -d --name sonarqube -p 9000:9000 sonarqube:latest
     java -jar sonarqube-9.x.jar - Standalone installation
