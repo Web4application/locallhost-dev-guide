@@ -1,5 +1,6 @@
 ## Quick Commands for Port 9000
 
+    
 Find what's using port 9000:
 lsof -i :9000 (Mac/Linux)
 netstat -ano | findstr :9000 (Windows)
@@ -24,11 +25,11 @@ This error occurs when another application is already using port 9000. Solutions
 
 Find and close the application using port 9000
 Use a different port:
-SonarQube: Edit sonar.properties to change sonar.web.port=9001
-PHP-FPM: Edit php-fpm.conf to change listen = 127.0.0.1:9001
-***Tomcat***: Edit server.xml to change the connector port
+SonarQube: Edit sonar.properties to change `sonar.web.port=9001`
+PHP-FPM: Edit `php-fpm.conf` to change listen = 127.0.0.1:9001
+***Tomcat***: Edit `server.xml` to change the connector port
 On Windows, find and kill the process: netstat -ano | findstr :9000 then taskkill /PID [PID] /F
-On Linux/Mac: lsof -i :9000 then kill -9 [PID]
+On Linux/Mac:` lsof -i :9000 then kill -9 [PID]`
 "SonarQube fails to start"
 
 Common issues with SonarQube startup:
@@ -235,22 +236,23 @@ Whether you're implementing code quality gates, optimizing PHP applications, man
 Quick Commands for Port 5173
 
 Find what's using port 5173:
-lsof -i :5173 (Mac/Linux)
-netstat -ano | findstr :5173 (Windows)
+'lsof -i :5173' (Mac/Linux)
+'netstat -ano | findstr :5173' (Windows)
 Start Vite on different port:
-npm run dev -- --port 5174
-vite --port 5174
+'npm run dev -- --port 5174'
+'vite --port 5174'
+
 Start with network access:
-npm run dev -- --host
-vite --host 0.0.0.0
+`npm run dev --host vite --host 0.0.0.0`
 Build for production:
-npm run build
-npm run preview (preview build)
+`npm run build`
+`npm run preview` (preview build)
 🚀 Vite Configuration Examples
 
 Essential vite.config.js configurations for development:
 
 Basic Configuration:
+
 // vite.config.js
 export default defineConfig({
   server: {
@@ -307,15 +309,17 @@ This error occurs when another application is already using port 5173. Solutions
 
 Find and close the application using port 5173
 Use a different port:
-Command line: npm run dev -- --port 5174
+
+Command line: `npm run dev -- --port 5174`
 In vite.config.js:
 export default defineConfig({
   server: {
     port: 5174
   }
 })
-On Windows, find and kill the process: netstat -ano | findstr :5173 then taskkill /PID [PID] /F
-On Linux/Mac: lsof -i :5173 then kill -9 [PID]
+On Windows, find and kill the process:
+`netstat -ano | findstr :5173 then taskkill /PID [PID] /F`
+On Linux/Mac: `lsof -i :5173 then kill -9 [PID]`
 "Hot Module Replacement (HMR) not working"
 
 If changes aren't automatically reflecting in the browser:
