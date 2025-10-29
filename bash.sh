@@ -54,4 +54,24 @@ npm create vite@latest my-app --template react
 cd my-app
 npm install
 npm run dev # opens on 5173 by default
+
          
+spring.application.name=user-service - Service naming
+server.port=8081 - Service port
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/ - Service discovery
+management.endpoints.web.exposure.include=health,info - Health checks
+spring.cloud.config.uri=http://localhost:8888 - Config server
+Docker Configuration
+
+EXPOSE 8081 - Docker port exposure
+docker run -p 8081:8081 app - Port mapping
+docker-compose.yml - Multi-service orchestration
+healthcheck: curl -f http://localhost:8081/actuator/health - Health monitoring
+environment: - SERVER_PORT=8081 - Environment variables
+
+Maven: mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8081
+Gradle: ./gradlew bootRun --args='--server.port=8081'
+npm scripts: "dev:8081": "PORT=8081 npm start"
+Docker build with port 8081
+CI/CD pipeline configuration
+
