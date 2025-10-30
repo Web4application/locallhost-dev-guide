@@ -1,5 +1,6 @@
+python3 -m pip install sphinxcontrib-chapeldomain
 git clone https://github.com/Web4application/locallhost-dev-guide.git
-cd locallhost-dev-guide
+cd locallhost.dev
 chmod +x scripts/*.sh
 ./scripts/push-to-github.sh
 
