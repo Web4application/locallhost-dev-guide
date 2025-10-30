@@ -1,4 +1,4 @@
-name: CI/CD Chat Server
+name: CI/CD  Server
 
 on:
   push:
